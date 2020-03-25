@@ -1,0 +1,13 @@
+{
+    "name": "extrude-server",
+    "version": "0.3.0",
+    "description": "Server for the Extrude app",
+    "engines": {
+        "node": "12.x"
+    },
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "test": "node test.js"
+    }
+}
