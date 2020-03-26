@@ -16,8 +16,8 @@ const io = socketIO(server);
 io.on('connection', socket => {
     console.log('Client connected', socket.id)
     socket.on('disconnect', () => console.log('Client disconnected'))
-    socket.on('player_action', data => {
-        console.log("player_action", data)
-        io.emit("player_event", { ...data, blah: "test" })
+    socket.on('player_input', data => {
+        console.log("player_input", data)
+        socket.emit("player_input_relay", { ...data, blah: "test" })
     })
 })
