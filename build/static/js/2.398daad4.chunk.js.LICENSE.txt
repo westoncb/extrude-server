@@ -11,6 +11,13 @@ object-assign
 */
 
 /*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <http://feross.org>
+ * @license  MIT
+ */
+
+/*!
 Copyright (C) 2013-2015 by Andrea Giammarchi - @WebReflection
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -47,6 +54,8 @@ MERCHANTABLITY OR NON-INFRINGEMENT.
 See the Apache Version 2.0 License for specific language governing permissions
 and limitations under the License.
 ***************************************************************************** */
+
+/*! https://mths.be/utf8js v2.1.2 by @mathias */
 
 /** @license React v0.19.1
  * scheduler.production.min.js
