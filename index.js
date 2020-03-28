@@ -22,15 +22,15 @@ io.on('connection', socket => {
 
         if (data.type.startsWith("input_")) {
 
-            socket.emit("event", { ...data, time: new Date() })
+            io.emit("event", { ...data, time: new Date() })
         } else {
 
             switch (data.type) {
                 case "player_enter_request":
-                    socket.emit("event", { ...data, type: "player_enter", time: new Date() })
+                    io.emit("event", { ...data, type: "player_enter", time: new Date() })
                     break;
                 case "player_exit":
-                    socket.emit("event", { ...data, time: new Date() })
+                    io.emit("event", { ...data, time: new Date() })
                     break;
                 default:
                     console.log("unrecognized client event: ", data)
