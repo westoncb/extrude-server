@@ -12,6 +12,9 @@ app.use(express.static(path.join(__dirname, 'build')));
 
 const io = socketIO(server);
 
+let players = {}
+const sockets = {}
+
 io.on('connection', socket => {
     console.log('Client connected', socket.id)
 
@@ -22,15 +25,31 @@ io.on('connection', socket => {
 
         if (data.type.startsWith("input_")) {
 
-            io.emit("event", { ...data, time: new Date() })
+            io.emit("event", { ...data })
         } else {
 
             switch (data.type) {
                 case "player_enter_request":
-                    io.emit("event", { ...data, type: "player_enter", time: new Date() })
+
+                    players[data.player.id] = { ...data.player}
+                    sockets[data.player.id] = socket
+                    io.emit("event", { ...data, type: "player_enter", player: data.player })
+
+                    const playerKeys = Object.keys(players)
+                    if (playerKeys.length > 1) {
+                        console.log("sending that full state request")
+                        sockets[playerKeys.find(key => key !== data.player.id)].emit("event", { type: "full_state_request"})
+                    }
                     break;
+                case "full_state_response":
+                    players = data.state.players
+                    io.emit("event", { type: "full_state_update", state: data.state })
+                    break
                 case "player_exit":
-                    io.emit("event", { ...data, time: new Date() })
+                    // not sure what this shit is about
+                    // delete sockets[id]
+                    // delete players[id]
+                    // io.emit("event", { ...data, op: { type: "r", id: data.player.id } })
                     break;
                 default:
                     console.log("unrecognized client event: ", data)
@@ -41,6 +60,15 @@ io.on('connection', socket => {
 
     socket.on("disconnect", info => {
         console.log("disconnect event: ", info)
-        socket.emit("event", {type: "player_exit", time: new Date()})
+        const index = Object.keys(sockets).map(key => sockets[key]).findIndex(s => s === socket)
+        const id = Object.keys(sockets)[index]
+        const player = players[id]
+
+        console.log("removing player/socket with id: ", id)
+
+        delete sockets[id]
+        delete players[id]
+
+        socket.emit("event", {type: "player_exit", player})
     })
 })
