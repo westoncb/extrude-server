@@ -37,9 +37,13 @@ io.on('connection', socket => {
 
                     const playerKeys = Object.keys(players)
                     if (playerKeys.length > 1) {
-                        console.log("sending that full state request")
-                        sockets[playerKeys.find(key => key !== data.player.id)].emit("event", { type: "full_state_request"})
+
+                        const selectedKey = playerKeys.find(key => (key !== data.player.id && sockets[key]))
+                        sockets[selectedKey].emit("event", { type: "full_state_request"})
                     }
+
+                    console.log("all players", Object.keys(players).map(key => players[key].name))
+
                     break;
                 case "full_state_response":
                     players = data.state.players
@@ -64,11 +68,14 @@ io.on('connection', socket => {
         const id = Object.keys(sockets)[index]
         const player = players[id]
 
-        console.log("removing player/socket with id: ", id)
-
         delete sockets[id]
         delete players[id]
 
-        socket.emit("event", {type: "player_exit", player})
+        if (id) {
+            console.log("removing player/socket with id: ", id)
+            io.emit("event", { type: "player_exit", player })
+        } else {
+            console.log("undefined player id. Playes, Sockets:", Object.keys(players), Object.keys(sockets))
+        }
     })
 })
