@@ -39,6 +39,7 @@ io.on('connection', socket => {
                     if (playerKeys.length > 1) {
 
                         const selectedKey = playerKeys.find(key => (key !== data.player.id && sockets[key]))
+                        console.log("Requesting full state from: ", players[selectedKey].name)
                         sockets[selectedKey].emit("event", { type: "full_state_request"})
                     }
 
@@ -49,6 +50,9 @@ io.on('connection', socket => {
                     players = data.state.players
                     io.emit("event", { type: "full_state_update", state: data.state })
                     break
+                case "chat_message":
+                    io.emit("event", data)
+                    break;
                 case "player_exit":
                     // not sure what this shit is about
                     // delete sockets[id]
@@ -71,11 +75,11 @@ io.on('connection', socket => {
         delete sockets[id]
         delete players[id]
 
-        if (id) {
-            console.log("removing player/socket with id: ", id)
+        if (id && player) {
+            console.log("removing player/socket: ", player)
             io.emit("event", { type: "player_exit", player })
         } else {
-            console.log("undefined player id. Playes, Sockets:", Object.keys(players), Object.keys(sockets))
+            console.log("undefined player. Players, Sockets:", Object.keys(players), Object.keys(sockets))
         }
     })
 })
