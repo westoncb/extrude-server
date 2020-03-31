@@ -14,6 +14,7 @@ const io = socketIO(server);
 
 let players = {}
 const sockets = {}
+const MAX_PLAYERS = 10
 
 io.on('connection', socket => {
     console.log('Client connected', socket.id)
@@ -30,6 +31,12 @@ io.on('connection', socket => {
 
             switch (data.type) {
                 case "player_enter_request":
+
+                    if (Object.values(players).length >= MAX_PLAYERS) {
+                        socket.emit("event", { type: "entrance_denied", reason: "too many players: " + Object.values(players).length })
+                        break;
+                    }
+                        
 
                     players[data.player.id] = { ...data.player}
                     sockets[data.player.id] = socket
