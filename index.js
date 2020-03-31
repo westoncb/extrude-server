@@ -53,11 +53,8 @@ io.on('connection', socket => {
                 case "chat_message":
                     io.emit("event", data)
                     break;
-                case "player_exit":
-                    // not sure what this shit is about
-                    // delete sockets[id]
-                    // delete players[id]
-                    // io.emit("event", { ...data, op: { type: "r", id: data.player.id } })
+                case "player_target_change":
+                    io.emit("event", data)
                     break;
                 default:
                     console.log("unrecognized client event: ", data)
