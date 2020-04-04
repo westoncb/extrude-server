@@ -66,6 +66,9 @@ io.on('connection', socket => {
                 case "player_sync":
                     io.emit("event", data)
                     break;
+                case "structures_sync":
+                    io.emit("event", data)
+                    break;
                 default:
                     console.log("unrecognized client event: ", data)
                     break;
