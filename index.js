@@ -63,10 +63,10 @@ io.on('connection', socket => {
                 case "player_target_change":
                     io.emit("event", data)
                     break;
-                case "player_sync":
+                case "update_player":
                     io.emit("event", data)
                     break;
-                case "structures_sync":
+                case "update_structure":
                     io.emit("event", data)
                     break;
                 default:
